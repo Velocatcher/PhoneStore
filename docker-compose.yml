@@ -1,0 +1,94 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: phonestore
+      POSTGRES_PASSWORD: phonestore
+    ports: ["5432:5432"]
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+
+
+  redis:
+    image: redis:7
+    ports: ["6379:6379"]
+
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.1
+    container_name: kafka
+    environment:
+      # Обязательные штуки для KRaft
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: "broker,controller"
+      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka:9093"
+
+      # Слушатели: внутренний для контейнеров и хостовый для твоих тулов
+      KAFKA_LISTENERS: "PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:9094,CONTROLLER://0.0.0.0:9093"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:9094"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,CONTROLLER:PLAINTEXT"
+
+      # ВАЖНО: сказать Кафке какой listener является контроллерским
+      KAFKA_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+
+      # Для брокерского взаимодействия пусть используется PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: "PLAINTEXT"
+
+      # Где хранить данные и какой кластер-ID использовать
+      KAFKA_LOG_DIRS: "/var/lib/kafka/data"
+      CLUSTER_ID: "MkU3OEVBNTcwNTJENDM2Qk"   # валидный пример base64 id (16 байт). Можешь оставить так.
+
+      # Разумные значения для одиночного брокера
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    ports:
+      - "9092:9092"   # для других контейнеров через имя сервиса (но проброшен на всякий)
+      - "9094:9094"   # для клиента с твоего хоста (используй localhost:9094)
+    volumes:
+      - kafkadata:/var/lib/kafka/data
+
+
+  opensearch:
+    image: opensearchproject/opensearch:2.17.0
+    container_name: opensearch
+    environment:
+      - discovery.type=single-node
+      - plugins.security.disabled=true
+      - DISABLE_SECURITY_PLUGIN_DEMO_INSTALLATION=true
+      - bootstrap.memory_lock=true
+      - OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
+      - DISABLE_INSTALL_DEMO_CONFIG=true
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=Admin@12345
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    ports: ["9200:9200","9600:9600"]
+
+
+  minio:
+    image: quay.io/minio/minio:RELEASE.2024-09-13T20-26-02Z
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio12345
+    ports: ["9000:9000","9001:9001"]
+
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    command: start-dev --http-port=8081
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports: ["8081:8081"]
+
+
+volumes:
+  pgdata: {}
+  kafkadata: {}

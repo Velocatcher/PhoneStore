@@ -1,0 +1,39 @@
+openapi: 3.0.3
+info:
+  title: PhoneStore Catalog API
+  version: 0.1.0
+paths:
+  /api/catalog/products:
+    get:
+      summary: List products
+      responses:
+        '200': {description: OK}
+    post:
+      summary: Create product
+      responses:
+        '200': {description: Created}
+  /api/catalog/products/{id}:
+    get:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: {type: integer}
+      responses:
+        '200': {description: OK}
+    put:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: {type: integer}
+      responses:
+        '200': {description: OK}
+    delete:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: {type: integer}
+      responses:
+        '204': {description: No Content}

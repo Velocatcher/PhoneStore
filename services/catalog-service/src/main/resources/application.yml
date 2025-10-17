@@ -1,0 +1,14 @@
+server:
+  port: 8082
+spring:
+  application.name: catalog-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: phonestore
+    password: phonestore
+jpa:
+  hibernate.ddl-auto: validate
+  properties.hibernate.show_sql: false
+  open-in-view: false
+liquibase:
+  change-log: classpath:db/changelog/db.changelog-master.yaml
