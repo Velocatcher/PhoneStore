@@ -1,37 +1,78 @@
 databaseChangeLog:
   - changeSet:
       id: 001-products
-      author: you
+      author: Bob_Catcher
       changes:
-      - createTable:
-         tableName: products
-         columns:
-            - column: {name: id, type: BIGSERIAL, constraints: {primaryKey: true}}
-            - column: {name: sku, type: VARCHAR(64), constraints: {nullable: false, unique: true}}
-            - column: {name: name, type: VARCHAR(255), constraints: {nullable: false}}
-            - column: {name: brand, type: VARCHAR(128)}
-            - column: {name: price, type: NUMERIC(12,2)}
-            - column: {name: currency, type: VARCHAR(8)}
-            - column: {name: description, type: TEXT}
+        - createTable:
+            tableName: products
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_products
+                    nullable: false
+              - column:
+                  name: sku
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: brand
+                  type: VARCHAR(128)
+              - column:
+                  name: price
+                  type: "NUMERIC(12,2)"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: currency
+                  type: VARCHAR(8)
+              - column:
+                  name: description
+                  type: TEXT
+        # Индексы (по желанию, но полезно)
+        - createIndex:
+            tableName: products
+            indexName: idx_products_brand
+            columns:
+              - column:
+                  name: brand
+        - createIndex:
+            tableName: products
+            indexName: idx_products_sku
+            unique: true
+            columns:
+              - column:
+                  name: sku
+
   - changeSet:
       id: 002-seed
-      author: you
+      author: Bob_Catcher
       changes:
         - insert:
             tableName: products
             columns:
-              - column: {name: sku, value: "IPH-15-128-BLK"}
-              - column: {name: name, value: "iPhone 15 128GB Black"}
-              - column: {name: brand, value: "Apple"}
-              - column: {name: price, valueNumeric: 799.00}
-              - column: {name: currency, value: "USD"}
-              - column: {name: description, value: "Flagship-ish."}
+              - column: { name: sku,        value: "IPH-15-128-BLK" }
+              - column: { name: name,       value: "iPhone 15 128GB Black" }
+              - column: { name: brand,      value: "Apple" }
+              - column: { name: price,      valueNumeric: 799.00 }
+              - column: { name: currency,   value: "USD" }
+              - column: { name: description,value: "Flagship-ish." }
         - insert:
             tableName: products
             columns:
-              - column: {name: sku, value: "SMG-S24-256-GRY"}
-              - column: {name: name, value: "Samsung Galaxy S24 256GB Gray"}
-              - column: {name: brand, value: "Samsung"}
-              - column: {name: price, valueNumeric: 899.00}
-              - column: {name: currency, value: "USD"}
-              - column: {name: description, value: "Also flagship. Very flagship."}
+              - column: { name: sku,        value: "SMG-S24-256-GRY" }
+              - column: { name: name,       value: "Samsung Galaxy S24 256GB Gray" }
+              - column: { name: brand,      value: "Samsung" }
+              - column: { name: price,      valueNumeric: 899.00 }
+              - column: { name: currency,   value: "USD" }
+              - column: { name: description,value: "Also flagship. Very flagship." }

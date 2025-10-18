@@ -1,0 +1,34 @@
+### CATALOG
+GET http://localhost:8082/api/catalog/products
+
+### По id
+GET http://localhost:8082/api/catalog/products/1
+
+### Создание
+POST http://localhost:8082/api/catalog/products
+Content-Type: application/json
+
+{
+  "sku": "TEST-123",
+  "name": "Test Phone",
+  "brand": "TestBrand",
+  "price": 499.00,
+  "currency": "USD",
+  "description": "Demo"
+}
+
+### Обновление
+PUT http://localhost:8082/api/catalog/products/1
+Content-Type: application/json
+
+{
+  "sku": "IPH-15-128-BLK",
+  "name": "iPhone 15 128GB Black",
+  "brand": "Apple",
+  "price": 789.00,
+  "currency": "USD",
+  "description": "Price updated"
+}
+
+### Удаление
+DELETE http://localhost:8082/api/catalog/products/1

@@ -240,3 +240,35 @@ PII шифруем на уровне БД или поля
 Логи без персональных и карточных данных
 
 Политики паролей, MFA для админов, журнал аудита
+
+Дерево проекта
+phonestore/
+├─ pom.xml # агрегатор
+├─ platform-bom/
+│ └─ pom.xml # версии зависимостей
+├─ docker-compose.yml # локальная инфра
+├─ README.md
+├─ common-dto/
+│ ├─ pom.xml
+│ └─ src/main/java/com/phonestore/common/dto/ProductDto.java
+├─ services/
+│ ├─ api-gateway/
+│ │ ├─ pom.xml
+│ │ ├─ src/main/java/com/phonestore/gateway/GatewayApplication.java
+│ │ └─ src/main/resources/application.yml
+│ ├─ catalog-service/
+│ │ ├─ pom.xml
+│ │ ├─ src/main/java/com/phonestore/catalog/CatalogApplication.java
+│ │ ├─ src/main/java/com/phonestore/catalog/domain/Product.java
+│ │ ├─ src/main/java/com/phonestore/catalog/repo/ProductRepository.java
+│ │ ├─ src/main/java/com/phonestore/catalog/service/ProductService.java
+│ │ ├─ src/main/java/com/phonestore/catalog/web/ProductController.java
+│ │ ├─ src/main/resources/application.yml
+│ │ └─ src/main/resources/db/changelog/db.changelog-master.yaml
+│ └─ search-service/
+│ ├─ pom.xml
+│ ├─ src/main/java/com/phonestore/search/SearchApplication.java
+│ ├─ src/main/java/com/phonestore/search/web/SearchController.java
+│ └─ src/main/resources/application.yml
+└─ openapi/
+└─ catalog-openapi.yaml
